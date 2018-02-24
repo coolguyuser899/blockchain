@@ -1,0 +1,201 @@
+Truffle framework - ethereum development framework
+http://truffleframework.com/
+
+**Ubuntu 16.04**
+
+Installation
+
+**Install pacakges**
+
+sudo apt-get update && sudo apt-get -y upgrade
+
+sudo apt-get -y install curl git vim build-essential
+
+**Install nodejs**
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+
+sudo apt-get install -y nodejs
+
+sudo npm install -g express
+
+**Install Truffle**
+sudo npm install -g truffle
+
+
+**Build dapp for quorum private blockchain**
+**http://truffleframework.com/tutorials/building-dapps-for-quorum-private-enterprise-blockchains**
+
+Connecting truffle to quorum
+
+cd workspace
+
+mkdir myproject
+
+cd myproject
+
+truffle init
+$ truffle init
+Downloading...
+Unpacking...
+Setting up...
+Unbox successful. Sweet!
+
+Commands:
+
+  Compile:        truffle compile
+  Migrate:        truffle migrate
+  Test contracts: truffle test
+
+
+**Configure truffle to running quorum client, update truffle.js**
+// File: `truffle.js` (edited for 7nodes example)
+module.exports = {
+  networks: {
+    development: {
+      host: "127.0.0.1",
+      port: 22000, // was 8545
+      network_id: "*", // Match any network id
+      gasPrice: 0,
+      gas: 4500000
+    }
+  }
+};
+
+
+**Write contract in contracts folder**
+// File: `./contracts/SimpleStorage.sol`
+
+pragma solidity ^0.4.17;
+
+contract SimpleStorage {
+  uint public storedData;
+
+  function SimpleStorage(uint initVal) public {
+    storedData = initVal;
+  }
+
+  function set(uint x) public {
+    storedData = x;
+  }
+
+  function get() constant public returns (uint retVal) {
+    return storedData;
+  }
+}
+
+**compile contract**
+
+~/workspace/myproject$ truffle compile
+Compiling ./contracts/Migrations.sol...
+Compiling ./contracts/SimpleStorage.sol...
+Writing artifacts to ./build/contracts
+
+
+**Create new migration with privateFor**
+Since we previously configured Truffle to connect to node 1, this transaction will deploy a contract from node 1, making the transaction private between node 1 and node 7.
+
+// File: `./migrations/2_deploy_simplestorage.js`
+
+var SimpleStorage = artifacts.require("SimpleStorage");
+
+module.exports = function(deployer) {
+  // Pass 42 to the contract as the first constructor parameter
+  deployer.deploy(SimpleStorage, 42, {privateFor: ["ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc="]})
+};
+
+
+**Deploy contract**
+~/workspace/myproject/migrations$ truffle migrate
+Could not connect to your Ethereum client. Please check that your Ethereum client:
+    - is running
+    - is accepting RPC connections (i.e., "--rpc" option is used in geth)
+    - is accessible over the network
+    - is properly configured in your Truffle configuration file (truffle.js)
+
+start quorum 7nodes
+
+./raft-start.sh
+
+~/workspace/myproject/migrations$ truffle migrate
+Using network 'development'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0xc6c75f5c5a9fa1f47b04b385193002893a3a91a176fcdb1daa62311362ef38a4
+  Migrations: 0xd9d64b7dc034fafdba5dc2902875a67b5d586420
+Saving successful migration to network...
+  ... 0xa8c325c17753da2a53f2569d5f2a100fef01667715322526f89f72e96d758550
+Saving artifacts...
+Running migration: 2_deploy_simplestorage.js
+  Deploying SimpleStorage...
+  ... 0x297f3d2a28dfc0e2879521a8a3bb97b7cedb80fa98508cc7ed69615c740ec25f
+  SimpleStorage: 0x938781b9796aea6376e40ca158f67fa89d5d8a18
+Saving successful migration to network...
+  ... 0x47e77e1f5857a0d6c6e6e5822c31a00922cad972f4d339f69eb7110c82712c47
+Saving artifacts...
+
+
+**Add new network configuration - truffle.js**
+add a connection to node 4 (nodefour) and node 7 (nodeseven):
+
+**Use truffle console to interact with deployed contract"
+
+~/workspace/myproject$ truffle console
+truffle(development)> 
+
+enter following line:
+ SimpleStorage.deployed().then(function(instance) { return instance.get(); })
+
+truffle(development)> SimpleStorage.deployed().then(function(instance) { return instance.get(); })
+{ [String: '42'] s: 1, e: 1, c: [ 42 ] }
+
+Ctrl+C exit node1 console
+
+**Connect to node4 console**
+~/workspace/myproject$ truffle console --network nodefour
+truffle(nodefour)> 
+
+run same command, you see value of 0 because this contract is not for node4.
+~/workspace/myproject$ truffle console --network nodefour
+
+truffle(nodefour)>  SimpleStorage.deployed().then(function(instance) { return instance.get(); })
+{ [String: '0'] s: 1, e: 0, c: [ 0 ] }
+
+**Connect to node7 to see private transaction value**
+
+~/workspace/myproject$ truffle console --network nodeseven
+truffle(nodeseven)> SimpleStorage.deployed().then(function(instance) { return instance.get(); })
+{ [String: '42'] s: 1, e: 1, c: [ 42 ] }
+
+**Change value in 2_deploy_simplestorage.js - 52 and try again**
+
+When contrace instance is re-deployed again, need to use --reset.
+
+~/workspace/myproject$ truffle migrate  --reset
+Using network 'development'.
+
+Running migration: 1_initial_migration.js
+  Replacing Migrations...
+  ... 0xbba17cb63439dcc06c90f30573b9234577e107b2a16d1474742ae15cf10525af
+  Migrations: 0xa501afd7d6432718daf4458cfae8590d88de818e
+Saving successful migration to network...
+
+
+~/workspace/myproject$ truffle console --network nodeseven
+truffle(nodeseven)> SimpleStorage.deployed().then(function(instance) { return instance.get(); })
+{ [String: '52'] s: 1, e: 1, c: [ 52 ] }
+truffle(nodeseven)>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
