@@ -1,30 +1,35 @@
-# blockchain quorum presentation on 28 Feb 2018 
-# demo of quorum privacy feature for enterprise blockchain
+# Blockchain quorum presentation on 28 Feb 2018 
+# Demo of quorum privacy feature for enterprise blockchain
 
 Environment
+'''
 ubuntu 16.04 -a brand new VM 
 uname -a
 Linux 28573526-forcevm 4.13.0-32-generic #35~16.04.1-Ubuntu SMP Thu Jan 25 10:13:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-
+'''
 Setup dependencies
-// install git 
+**install git **
+'''
 sudo apt-get update
 sudo apt-get upgrade  // press Y when asked Do you want to continue [Y/n]
 sudo apt-get install git   
 
 $  git --version
 git version 2.7.4
-
-// make folder for download and source file
+'''
+**make folder for download and source file**
+'''
 mkdir workspace
+'''
+**install Constellation (self managing, peer to peer system) **
+https://github.com/jpmorganchase/constellation
 
-// install Constellation (self managing, peer to peer system)
-// https://github.com/jpmorganchase/constellation
-
-// install supporting libraries
+**install supporting libraries**
+'''
 apt-get install libdb-dev libleveldb-dev libsodium-dev zlib1g-dev libtinfo-dev
-
-// download pre-build 
+'''
+**download pre-build **
+'''
 cd workspace 
 wget https://github.com/jpmorganchase/constellation/releases/download/v0.3.2/constellation-0.3.2-ubuntu1604.tar.xz
 
@@ -36,8 +41,9 @@ constellation-0.3.2-ubuntu1604/constellation-node
 
 $ ./constellation-0.3.2-ubuntu1604/constellation-node --version
 Constellation Node 0.3.2
-
-// install go language
+'''
+**install go language**
+'''
 sudo apt-get update
 sudo apt-get -y upgrade
 cd workspace   
@@ -51,19 +57,21 @@ go1.9.4.linux-amd64.tar.gz
 // add /usr/local/go/bin to PATH
 vi ~/.profile
 export PATH=$PATH:/usr/local/go/bin
-
-// ****please don't use this to install golang, default is 1.6 old version
-// sudo apt-get install golang  // press Y at prompt
-
-// download quorum source code and build, required for privacy feature
+'''
+please don't use this to install golang, default is 1.6 old version
+'''
+sudo apt-get install golang  // press Y at prompt
+'''
+**download quorum source code and build, required for privacy feature**
+'''
 cd workspace 
 mkdir quorum_src
 cd quorum_src
 git clone https://github.com/jpmorganchase/quorum.git
 cd quorum
 . ~/.profile    // source PATH of go-1.9.4
-make all
-// $ make all
+
+$ make all
 make all
 build/env.sh go run build/ci.go install
 >>> /usr/local/go/bin/go install -ldflags -X main.gitCommit=ee498061b5a74bf1f3290139a53840345fa038cb -v github.com/ethereum/go-ethereum github.com/ethereum/go-ethereum/accounts 
@@ -74,12 +82,14 @@ make test
 ok  	github.com/ethereum/go-ethereum/accounts	0.025s
 ok  	github.com/ethereum/go-ethereum/accounts/abi	0.030s
 ......
+'''
 
-// add geth to PATH to load quorum 
+**add geth to PATH to load quorum **
 ~/workspace/quorum_src/quorum/build/bin
 
-// download quarum examples
+**download quarum examples**
 // ignore virtual box and vagrant if it does not work for you
+'''
 git clone https://github.com/jpmorganchase/quorum-examples
 cd  ~/workspace/quorum-examples/examples/7nodes
 
@@ -91,7 +101,8 @@ drwxr-xr-x 10 force force 4096 Feb 24 15:47 qdata
 
 ./runscript.sh script1.js  //deploy contract and transaction
 
-// 7nodes instruction - https://github.com/jpmorganchase/quorum-examples/tree/master/examples/7nodes
+**7nodes instruction - https://github.com/jpmorganchase/quorum-examples/tree/master/examples/7nodes**
+'''
 $ geth attach  qdata/dd1/geth.ipc 
 $ geth attach  qdata/dd5/geth.ipc 
 $ geth attach  qdata/dd7/geth.ipc 
@@ -148,5 +159,6 @@ undefined
 > private.get()
 52
 
+'''
 
 
