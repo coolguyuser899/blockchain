@@ -2,30 +2,32 @@
 # Demo of quorum privacy feature for enterprise blockchain
 
 Environment
-'''
+
 ubuntu 16.04 -a brand new VM 
 uname -a
 Linux 28573526-forcevm 4.13.0-32-generic #35~16.04.1-Ubuntu SMP Thu Jan 25 10:13:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-'''
+
 Setup dependencies
 **install git **
-'''
+
 sudo apt-get update
+
 sudo apt-get upgrade  // press Y when asked Do you want to continue [Y/n]
-sudo apt-get install git   
+
+sudo apt-get install git 
 
 $  git --version
 git version 2.7.4
-'''
+
 **make folder for download and source file**
-'''
+
 mkdir workspace
-'''
+
 **install Constellation (self managing, peer to peer system) **
 https://github.com/jpmorganchase/constellation
 
 **install supporting libraries**
-'''
+
 apt-get install libdb-dev libleveldb-dev libsodium-dev zlib1g-dev libtinfo-dev
 '''
 **download pre-build **
@@ -46,7 +48,8 @@ Constellation Node 0.3.2
 '''
 sudo apt-get update
 sudo apt-get -y upgrade
-cd workspace   
+cd workspace 
+
 wget https://dl.google.com/go/go1.9.4.linux-amd64.tar.gz
 tar -xvf go1.9.4.linux-amd64.tar.gz
 sudo mv go /usr/local
