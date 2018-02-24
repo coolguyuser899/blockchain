@@ -1,0 +1,64 @@
+2c2
+<    geth - the go-ethereum command line interface
+---
+>    geth1.8.1 - the go-ethereum command line interface
+7c7
+<    geth [options] command [command options] [arguments...]
+---
+>    geth1.8.1 [options] command [command options] [arguments...]
+10c10
+<    1.7.2-stable-ee498061
+---
+>    1.8.1-stable-1e67410e
+38c38
+<   --networkid value                  Network identifier (integer, 1=Frontier, 2=Morden (disused), 3=Ropsten, 4=Rinkeby, 5=Ottoman) (default: 1)
+---
+>   --networkid value                  Network identifier (integer, 1=Frontier, 2=Morden (disused), 3=Ropsten, 4=Rinkeby) (default: 1)
+41,42d40
+<   --ottoman                          Ottoman network: pre-configured istanbul bft test network
+<   --dev                              Developer mode: pre-configured private network with several debugging flags
+43a42
+>   --gcmode value                     Blockchain garbage collection mode ("full", "archive") (default: "full")
+47c46
+<   --lightpeers value                 Maximum number of LES client peers (default: 20)
+---
+>   --lightpeers value                 Maximum number of LES client peers (default: 100)
+49a49,52
+> DEVELOPER CHAIN OPTIONS:
+>   --dev               Ephemeral proof-of-authority network with a pre-funded developer account, mining enabled
+>   --dev.period value  Block period to use in developer mode (0 = mine only if transaction pending) (default: 0)
+>   
+71c74,76
+<   --cache value            Megabytes of memory allocated to internal caching (min 16MB / database forced) (default: 128)
+---
+>   --cache value            Megabytes of memory allocated to internal caching (default: 1024)
+>   --cache.database value   Percentage of cache memory allowance to use for database io (default: 75)
+>   --cache.gc value         Percentage of cache memory allowance to use for trie pruning (default: 25)
+74,82d78
+< QUORUM OPTIONS:
+<   --permissioned  If enabled, the node will allow only a defined list of nodes to connect
+<   
+< RAFT OPTIONS:
+<   --raft                    If enabled, uses Raft instead of Quorum Chain for consensus
+<   --raftblocktime value     Amount of time between raft block creations in milliseconds (default: 50)
+<   --raftjoinexisting value  The raft ID to assume when joining an pre-existing cluster (default: 0)
+<   --raftport value          The port to bind for the raft transport (default: 50400)
+<   
+99a96
+>   --rpcvhosts value      Comma separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard. (default: "localhost")
+127,128c124,125
+<   --gpoblocks value      Number of recent blocks to check for gas prices (default: 10)
+<   --gpopercentile value  Suggested gas price is the given percentile of a set of recent transaction gas prices (default: 50)
+---
+>   --gpoblocks value      Number of recent blocks to check for gas prices (default: 20)
+>   --gpopercentile value  Suggested gas price is the given percentile of a set of recent transaction gas prices (default: 60)
+159,165c156
+<   
+< ISTANBUL OPTIONS:
+<   --istanbul.requesttimeout value  Timeout for each Istanbul round in milliseconds (default: 10000)
+<   --istanbul.blockperiod value     Default minimum difference between two consecutive block's timestamps in seconds (default: 1)
+<   --istanbul.blockpausetime value  Pause time when zero tx in previous block, values should be larger than istanbul.blockperiod (default: 2)
+<   --emitcheckpoints                If enabled, emit specially formatted logging checkpoints
+<   --help, -h                       show help
+---
+>   --help, -h  show help
